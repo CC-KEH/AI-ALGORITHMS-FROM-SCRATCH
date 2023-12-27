@@ -2,6 +2,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+
 class Linear_Regression: 
     def __init__(self,lr=0.1,n_iters=100):
         self.weights = None
@@ -46,7 +47,6 @@ if __name__ == "__main__":
     X,y = datasets.make_regression(n_samples=300,n_features=1,noise=10,random_state=42)
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=3)
     
-
     model = Linear_Regression()
     model.fit(X_train,y_train)
     preds = model.predict(X_test)
@@ -55,7 +55,8 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=(8,6))
     predictions = model.predict(X)
     cmap = plt.get_cmap('viridis')
-    plt.scatter(X_train,y_train,color=cmap(0.9),s=10)
-    plt.scatter(X_test,y_test,color=cmap(0.5),s=10)
+    plt.scatter(X_train,y_train,color=cmap(0.9),s=10,label='Training Data')
+    plt.scatter(X_test,y_test,color=cmap(0.5),s=10,label='Test Data')
     plt.plot(X,predictions,color="black",linewidth=2,label="Best Fit Line")
+    plt.legend()
     plt.show()
