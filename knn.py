@@ -24,7 +24,9 @@ class KNN:
         return predictions
     
     def _predict_single(self,x1):
+        # Find distance between x1 and all other points of x_train
         distances = [euclidean_distance(x1,x2) for x2 in self.x_train]
+        # Sort the distances, and get the index of top k points closest to x1.
         k_indices = np.argsort(distances)[:self.k]
         k_nearest_nbrs = [self.y_train[i] for i in k_indices]
         
@@ -55,7 +57,7 @@ if __name__ == "__main__":
     preds = classifier.predict(x_test)
     
     accuracy = np.sum(preds==y_test) / len(y_test)
-    
+    print("On Classification Task")
     print("Accuracy:", accuracy)
     
     #* Regression 
@@ -75,4 +77,5 @@ if __name__ == "__main__":
 
     # Calculate the RMSE
     rmse = np.sqrt(np.mean((y_test - regressor.predict(x_test))**2))
+    print("On Regression Task")
     print("RMSE:", rmse)
