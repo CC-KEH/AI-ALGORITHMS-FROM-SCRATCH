@@ -1,7 +1,6 @@
 import numpy as np
 from collections import Counter
 from sklearn.model_selection import train_test_split
-from sklearn.datasets import make_regression, make_classification 
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
