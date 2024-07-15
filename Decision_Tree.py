@@ -18,12 +18,13 @@ class Node:
 
 class Decision_Tree:
     
-    def __init__(self, max_depth=10, min_sample_split=2, criteria='entropy', n_features=None):
+    def __init__(self, max_depth=10, min_sample_split=2, criteria='entropy', n_features=None, task='classification'):
         self.max_depth = max_depth                # Stopping Criteria
         self.min_sample_split = min_sample_split  # Stopping Criteria
         self.criteria = criteria                  # Criteria type, entropy in our case.
         self.n_features = n_features              # No of features we'll be using for constructing the tree.
         self.root = None
+        self.task = task
         
     def construct_tree(self, X, y, n_features, n_samples, depth=0):
         # No of labels there are in a specific feature,
@@ -52,9 +53,12 @@ class Decision_Tree:
         return c.most_common(1)[0][0]
         
     def calculate_entropy(self, y):
-        hist = np.bincount(y) # returns a frequency list of elements, from 0 to max(y).
-        ps = hist / len(y)    # [p(x1), p(x2), p(x3),..., p(xN)]
-        return -np.sum([p * np.log(p) for p in ps if p > 0])  # Only consider non-zero probabilities
+        if self.task == 'regression':
+            return np.var(y)
+        else:
+            hist = np.bincount(y) # returns a frequency list of elements, from 0 to max(y).
+            ps = hist / len(y)    # [p(x1), p(x2), p(x3),..., p(xN)]
+            return -np.sum([p * np.log(p) for p in ps if p > 0])  # Only consider non-zero probabilities
 
     def split(self,X_col,threshold):
         # Left Split, val <= threshold

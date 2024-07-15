@@ -1,5 +1,6 @@
 from Decision_Tree import Decision_Tree
 import numpy as np
+import pandas as pd
 from collections import Counter
 
 class Random_Forest:
@@ -9,19 +10,21 @@ class Random_Forest:
         self.min_sample_split = min_sample_split
         self.n_feature = n_feature
         self.trees = []
-        self.task = 'classification'
+        self.task = task
         
     def fit(self,X,y):
         for _ in range(self.n_trees):
             dt = Decision_Tree(max_depth = self.max_depth, 
                                min_sample_split = self.min_sample_split, 
-                               n_features = self.n_feature)
+                               n_features = self.n_feature,
+                               task=self.task)
             
             X_sampled, y_sampled = self.create_samples(X,y)
 
             dt.fit(X_sampled,y_sampled)
             self.trees.append(dt)
-            
+
+        
     def create_samples(self,X,y):
         n_samples = X.shape[0]
         indxs = np.random.choice(n_samples, n_samples, replace = True)
@@ -62,13 +65,19 @@ if __name__ == "__main__":
     rf = Random_Forest(n_trees = 10)
     rf.fit(X_train,y_train)
     preds = rf.predict(X_test)
-    print(accuracy_score(y_test,preds))
+    print("Classification")
+    print("Accuracy:",accuracy_score(y_test,preds))
+    
+    print('\n')
     
     #* Regression
-    from sklearn.datasets import load_boston
-    X, y = load_boston(return_X_y = True)
-    X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2, random_state = 42)
+    data_url = "http://lib.stat.cmu.edu/datasets/boston"
+    raw_df = pd.read_csv(data_url, sep="\s+", skiprows=22, header=None)
+    data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])
+    target = raw_df.values[1::2, 2]
+    X_train, X_test, y_train, y_test = train_test_split(data,target,test_size = 0.2, random_state = 42)
     rf = Random_Forest(n_trees = 10, task = 'regression')
     rf.fit(X_train,y_train)
     preds = rf.predict(X_test)
-    print(mse(y_test,preds))
+    print("Regression")
+    print("Mean Squared Error:",mse(y_test,preds))
