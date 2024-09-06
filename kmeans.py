@@ -10,10 +10,8 @@ class KMeans:
     def __init__(self, K=5, max_iters=100):
         self.K = K
         self.max_iters = max_iters
-
         # list of sample indices for each cluster
         self.clusters = [[] for _ in range(self.K)]
-
         # the centers of each cluster
         self.centroids = []
 
